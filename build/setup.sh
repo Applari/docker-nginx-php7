@@ -5,12 +5,13 @@
 ##-------------------------------------------------------
 
 # set timezone machine to America/Sao_Paulo
-cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+cp /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
 
 # set UTF-8 environment
-echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
-echo 'LANG=en_US.UTF-8' >> /etc/environment
-echo 'LC_CTYPE=en_US.UTF-8' >> /etc/environment
+echo 'LC_ALL=fi_FI.UTF-8' >> /etc/environment
+echo 'LANG=fi_FI.UTF-8' >> /etc/environment
+echo 'LC_CTYPE=fi_FI.UTF-8' >> /etc/environment
+
 
 # enable xdebug
 echo 'xdebug.remote_enable=1' >> /etc/php/7.0/mods-available/xdebug.ini
@@ -21,9 +22,10 @@ echo 'xdebug.scream=0' >> /etc/php/7.0/mods-available/xdebug.ini
 echo 'xdebug.show_local_vars=1' >> /etc/php/7.0/mods-available/xdebug.ini
 echo 'xdebug.idekey=PHPSTORM' >> /etc/php/7.0/mods-available/xdebug.ini
 
-# set PHP7 timezone to America/Sao_Paulo
-sed -i "s/;date.timezone =*/date.timezone = America\/Sao_Paulo/" /etc/php/7.0/fpm/php.ini
-sed -i "s/;date.timezone =*/date.timezone = America\/Sao_Paulo/" /etc/php/7.0/cli/php.ini
+
+# set PHP7 timezone to Europe/Helsinki
+sed -i "s/;date.timezone =*/date.timezone = Europe\/Helsinki/" /etc/php/7.0/fpm/php.ini
+sed -i "s/;date.timezone =*/date.timezone = Europe\/Helsinki/" /etc/php/7.0/cli/php.ini
 
 # setup php7.0-fpm to not run as daemon (allow my_init to control)
 sed -i "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.0/fpm/php-fpm.conf
