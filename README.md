@@ -8,7 +8,16 @@
 
 
 ## Usage
+### Production mode
 `docker run -p 80:80 -p 3306:3306 -v $(pwd)/public:/var/www/public applari/phusion-lemp`
+
+### Dev mode
+(todo) Owerwrite ENVIROMENT enviroment variable to enable dev tools.
+`docker run -e ENVIROMENT=development -p 80:80 -p 3306:3306 -v $(pwd)/public:/var/www/public applari/phusion-lemp`
+
+
+## Docker Hub
+
 
 ## Github
 https://github.com/Applari/phusion-lemp7

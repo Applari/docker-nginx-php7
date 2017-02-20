@@ -8,7 +8,12 @@ ENV LANG       fi_FI.UTF-8
 ENV LC_ALL     fi_FI.UTF-8
 
 # todo: generate and use these variables in the scripts
-ENV ENVIROMENT  	development
+ENV ENVIROMENT  	production
+ENV MYSQL_ROOTUSER	root      
+#ENV MYSQL_ROOTPW	
+ENV MYSQL_USER		wp
+ENV MYSQL_PASS		kissa
+ENV MYSQL_HOST		localhost
 ENV WP_DB			applariwp
 ENV WP_DB_USER		wpuser
 ENV WP_DB_PASSWD	kissa1234
@@ -40,14 +45,16 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y nginx-full
 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -qy mariadb-server
 
-# Tweak my.cnf
-RUN sed -i -e 's#\(bind-address.*=\).*#\1 0.0.0.0#g' /etc/mysql/my.cnf
-RUN sed -i -e 's#\(log_error.*=\).*#\1 /db/mysql_safe.log#g' /etc/mysql/my.cnf
-RUN sed -i -e 's/\(user.*=\).*/\1 nobody/g' /etc/mysql/my.cnf
+# NOT WORKING! Tweak my.cnf
+# RUN sed -i -e 's#\(bind-address.*=\).*#\1 0.0.0.0#g' /etc/mysql/my.cnf
+# RUN sed -i -e 's#\(log_error.*=\).*#\1 /db/mysql_safe.log#g' /etc/mysql/my.cnf
+# RUN sed -i -e 's/\(user.*=\).*/\1 nobody/g' /etc/mysql/my.cnf
+
+RUN echo "log_error=/db/mysql_safe.log" >> /etc/mysql/conf.d/mysql.cnf
 
 # InnoDB engine to use 1 file per table, vs everything in ibdata.
-RUN echo '[mysqld]' > /etc/mysql/conf.d/innodb_file_per_table.cnf
-RUN echo 'innodb_file_per_table' >> /etc/mysql/conf.d/innodb_file_per_table.cnf
+# RUN echo '[mysqld]' > /etc/mysql/conf.d/innodb_file_per_table.cnf
+# RUN echo 'innodb_file_per_table' >> /etc/mysql/conf.d/innodb_file_per_table.cnf
 
 VOLUME /db
 
