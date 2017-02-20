@@ -7,6 +7,12 @@ RUN locale-gen fi_FI.UTF-8
 ENV LANG       fi_FI.UTF-8
 ENV LC_ALL     fi_FI.UTF-8
 
+# todo: generate and use these variables in the scripts
+ENV WP_DB			applariwp
+ENV WP_DB_USER		wpuser
+ENV WP_DB_PASSWD	kissa1234
+ENV WP_USER			applariadmin
+ENV WP_PASSWD 		applaripw
 ENV GITHUB_ACCESS_TOKEN	965b94daa978dde4945c8ae29a35559a6f7f3a57
 
 # phusion setup
@@ -48,12 +54,21 @@ VOLUME /db
 
 ### PHP7-FPM
 
-# add php.ini
+# add configs 
 ADD build/php.ini /etc/php/7.0/fpm/
+ADD build/php-fpm.conf /etc/php/7.0/fpm/
+
 
 # install php composer
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
+
+# Add WP-CLI
+RUN curl -o /usr/local/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ;\
+	mv /usr/local/wp-cli.phar /usr/local/bin/wp ;\
+	chmod +x /usr/local/bin/wp
+# allow wp-cli run as root by default
+RUN echo -e '\nwp() \n {  \n /usr/local/bin/wp "$@" --allow-root --path=/var/www/public/ \n } \n' >> /root/.bashrc 
 
 # add build script (also set timezone to Europe/Helsinki)
 RUN mkdir -p /root/setup
@@ -84,22 +99,33 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 ADD build/phpfpm.sh /etc/service/phpfpm/run
 RUN chmod +x /etc/service/phpfpm/run
 
+
 # add startup scripts for mariadb
 RUN mkdir /etc/service/mariadb
 ADD build/mariadb.sh /etc/service/mariadb/run
 RUN chmod +x /etc/service/mariadb/run
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
+# CHANGE TO DB LOGS RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+#    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 
 # set WWW public folder
 RUN mkdir -p /var/www/public
 # ADD build/index.php /var/www/public/index.php
-RUN cd /var/www/public && git clone https://$GITHUB_ACCESS_TOKEN:x-oauth-basic@github.com/Applari/docker-test-index.git && mv docker-test-index/* . && rm -rf docker-test-index && ls -la
+#RUN cd /var/www/public && git clone https://$GITHUB_ACCESS_TOKEN:x-oauth-basic@github.com/Applari/docker-test-index.git && mv docker-test-index/* . && rm -rf docker-test-index && ls -la
 
 
 RUN chown -R www-data:www-data /var/www
 RUN chmod -R 755 /var/www
+
+# add scripts
+RUN echo "Add checkAndInstallWP.sh"
+ADD build/checkAndInstallWP.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/checkAndInstallWP.sh
+
+# TODO: add adminer script to ease db dev https://github.com/vrana/adminer/releases/download/v4.2.5/adminer-4.2.5-en.php
+
+# TODO: install wordpress if not installed
+
 
 # set terminal environment
 ENV TERM=xterm

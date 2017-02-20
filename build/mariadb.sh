@@ -13,14 +13,25 @@ start_mysql(){
 if [ -f /db/mysql/user.MYD ]; then
   echo "Database exists."
 else
-  echo "Creating database."
+  echo "Creating database and root-user."
   /usr/bin/mysql_install_db --datadir=/db >/dev/null 2>&1
   start_mysql
-  echo "Database created. Granting access to 'root' user for all hosts."
-  mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+  mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;"
+  mysql -uroot -e "FLUSH PRIVILEGES;"
+
+  #not here
+ #echo "Create wordpress db : applariwp "
+ #mysql -uroot -e "CREATE DATABASE applariwp;"
+ #echo "created wordpress user applariwp"
+#mysql -uroot -e "CREATE USER 'applariwpuser'@'localhost' IDENTIFIED BY 'kissa';"
+ # mysql -uroot -e "GRANT ALL PRIVILEGES ON applariwp.* TO 'applariwpuser'@'localhost' WITH GRANT OPTION;"
+  #echo "done  USER 'applariwpuser'@'localhost' IDENTIFIED BY 'kissa'; and granted permissions"
+  #mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;"
+  #mysql -uroot -e "FLUSH PRIVILEGES;"
   mysqladmin -u root shutdown
 fi
 
 echo "Starting MariaDB..."
-/usr/bin/mysqld_safe --skip-syslog --datadir='/db'
+#/usr/bin/mysqld_safe --skip-syslog --datadir='/db'
+/usr/bin/mysqld_safe --datadir='/db' --log-error
 
