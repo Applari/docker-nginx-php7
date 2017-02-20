@@ -8,6 +8,7 @@ ENV LANG       fi_FI.UTF-8
 ENV LC_ALL     fi_FI.UTF-8
 
 # todo: generate and use these variables in the scripts
+ENV ENVIROMENT  	development
 ENV WP_DB			applariwp
 ENV WP_DB_USER		wpuser
 ENV WP_DB_PASSWD	kissa1234

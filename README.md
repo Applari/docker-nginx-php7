@@ -3,6 +3,18 @@
     <img height="81" width="341" src="http://upload.wikimedia.org/wikipedia/commons/7/79/Docker_(container_engine)_logo.png">
   </a>
 </p>
+
+# Applari phusion lemp7
+
+
+## Usage
+`docker run -p 80:80 -p 3306:3306 -v $(pwd)/public:/var/www/public applari/phusion-lemp`
+
+## Github
+https://github.com/Applari/phusion-lemp7
+
+
+
 -----
 # docker-nginx-php7
 A Nginx + PHP 7.0 (FPM) base container. Builds upon on the Ubuntu 16.04 LTS unsing [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) container. You can find the docker automated build [here](https://registry.hub.docker.com/u/ttaranto/docker-nginx-php7/).
