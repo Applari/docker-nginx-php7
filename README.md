@@ -23,6 +23,11 @@
 https://github.com/Applari/phusion-lemp7
 
 
+# about
+
+## DB
+* db and log is stored at '/db' volume
+* todo: send log to here
 
 -----
 # docker-nginx-php7
